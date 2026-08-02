@@ -1,0 +1,14 @@
+{
+  "name": "SAP ROLL — Sugaring-season dice",
+  "short_name": "SAP ROLL",
+  "description": "Roll five wooden dice, hold the keepers, and fill a maple scorecard with friends.",
+  "start_url": ".",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#f2e4c4",
+  "theme_color": "#173d2c",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

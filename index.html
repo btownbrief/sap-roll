@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#173d2c">
+  <title>SAP ROLL — Sugaring-season dice</title>
+  <meta name="description" content="Roll five wooden dice through a Vermont sugaring season. Hold, reroll, and fill the maple scorecard with 2–4 players.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SAP ROLL — Sugaring-season dice">
+  <meta property="og:description" content="Five wooden dice. Three rolls. One sweet scorecard. Play together in the sugar shack.">
+  <meta property="og:url" content="https://play.btownbrief.com/sap-roll/">
+  <meta property="og:image" content="https://play.btownbrief.com/sap-roll/icon-180.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://play.btownbrief.com/sap-roll/icon-180.png">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app">
+  <section id="menu" class="screen">
+    <div class="sugar-sky" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="menu-wrap">
+      <header class="brand">
+        <div class="brand-kicker">BTOWN GAMES PRESENTS</div>
+        <h1><span>SAP</span> ROLL</h1>
+        <p>Five wooden dice. Three shakes.<br>Make this run count.</p>
+      </header>
+
+      <div class="mode-board">
+        <div class="mode-label">PLAY AT THIS SHACK</div>
+        <div id="localSeats" class="seat-btns" role="group" aria-label="Players on this phone">
+          <button class="seat-btn selected" data-local-seats="2" aria-pressed="true">2</button>
+          <button class="seat-btn" data-local-seats="3" aria-pressed="false">3</button>
+          <button class="seat-btn" data-local-seats="4" aria-pressed="false">4</button>
+        </div>
+        <button id="passBtn" class="big-btn"><b>🍁 PASS &amp; PLAY</b><small>one open table, no secrets</small></button>
+
+        <div class="mode-divider"><span>OR TAKE ON A LOCAL</span></div>
+        <div class="bot-grid">
+          <button class="bot-btn" data-bot="sue"><b>🪣 SUGARMAKER SUE</b><small>steady hands, sharp pencil</small></button>
+          <button class="bot-btn" data-bot="bob"><b>🪵 BACKYARD BOB</b><small>trusts the dice and weather</small></button>
+        </div>
+
+        <div class="mode-divider"><span>OR GATHER THE CREW ONLINE</span></div>
+        <div class="online-grid">
+          <button id="hostBtn" class="bot-btn"><b>🔥 START A BOIL</b><small>get a four-letter code</small></button>
+          <button id="joinBtn" class="bot-btn"><b>🧤 JOIN A BOIL</b><small>bring the code</small></button>
+        </div>
+        <button id="rejoinBtn" class="chip-btn hidden"></button>
+      </div>
+
+      <details class="rules-note">
+        <summary>How the sap runs</summary>
+        <p>Roll up to three times, tapping dice to hold them. Then fill one open box. After 12 rounds each, the sweetest total wins. Score 63 or more up top for a 35-point bonus.</p>
+      </details>
+    </div>
+
+    <div id="onlinePanel" class="overlay hidden">
+      <div class="dialog-card">
+        <div id="opTitle" class="dialog-title">START A BOIL</div>
+        <label for="opName">YOUR NAME</label>
+        <input id="opName" maxlength="24" autocomplete="nickname" placeholder="Sugarmaker">
+        <div id="opSeatsWrap">
+          <label>PHONES AT THE SHACK</label>
+          <div id="opSeats" class="seat-btns" role="group" aria-label="Phones at the shack">
+            <button class="seat-btn selected" data-seats="2" aria-pressed="true">2</button>
+            <button class="seat-btn" data-seats="3" aria-pressed="false">3</button>
+            <button class="seat-btn" data-seats="4" aria-pressed="false">4</button>
+          </div>
+        </div>
+        <div id="opCodeWrap" class="hidden">
+          <label for="opCode">BOIL CODE</label>
+          <input id="opCode" maxlength="4" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="ABCD">
+        </div>
+        <div id="opError" class="form-error hidden" role="alert"></div>
+        <div class="dialog-actions">
+          <button id="opCancel" class="chip-btn">BACK</button>
+          <button id="opGo" class="big-btn">GET A CODE</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="lobby" class="overlay hidden">
+      <div class="dialog-card lobby-card">
+        <div class="dialog-title">READ THIS CODE TO YOUR CREW</div>
+        <div id="lobbyCode"></div>
+        <div id="lobbyHint">They tap JOIN A BOIL and type it in.</div>
+        <ul id="lobbyNames" aria-live="polite"></ul>
+        <button id="lobbyCancel" class="chip-btn">DAMPEN THE FIRE</button>
+      </div>
+    </div>
+
+    <footer>A Btown Games production · <a href="https://play.btownbrief.com/" target="_blank" rel="noopener">More games →</a> · <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Read the BTown Brief →</a></footer>
+  </section>
+
+  <section id="game" class="screen hidden">
+    <header class="game-topbar">
+      <button id="homeBtn" class="icon-btn" aria-label="Back to menu">⌂</button>
+      <div class="mini-brand">SAP <span>ROLL</span></div>
+      <button id="rulesBtn" class="icon-btn" aria-label="How scoring works">?</button>
+    </header>
+
+    <div id="playerRail" class="player-rail" aria-label="Player standings"></div>
+
+    <section class="roll-table">
+      <div class="turn-line">
+        <div><span id="turnName">Player 1</span><small id="turnPrompt">Shake the bucket</small></div>
+        <div id="rollMeter" class="roll-meter" aria-label="Rolls remaining"></div>
+      </div>
+      <div id="dice" class="dice-tray" aria-label="Five dice"></div>
+      <div class="roll-controls">
+        <button id="rollBtn" class="roll-btn">SHAKE THE BUCKET</button>
+        <span id="holdHint">Tap dice to hold after your first roll.</span>
+      </div>
+    </section>
+
+    <section class="score-sheet">
+      <div class="sheet-heading">
+        <div><span>SUGAR LOG</span><small>Tap an open box to score this roll</small></div>
+        <button id="scoreHelp" class="chip-btn">SCORING GUIDE</button>
+      </div>
+      <div id="scoreTableWrap" class="score-table-wrap"></div>
+    </section>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <div id="rulesPanel" class="overlay hidden">
+      <div class="dialog-card rules-card">
+        <button id="rulesClose" class="close-btn" aria-label="Close scoring guide">×</button>
+        <div class="dialog-title">THE SUGAR LOG</div>
+        <div id="rulesList"></div>
+        <p class="bonus-copy"><b>Sweet bonus:</b> total 63 or more across First Taps through Six Sugarmakers for +35.</p>
+      </div>
+    </div>
+
+    <div id="gameOver" class="overlay hidden">
+      <div class="dialog-card result-card">
+        <div class="result-leaf">🍁</div>
+        <div id="resultTitle" class="result-title"></div>
+        <div id="resultLine"></div>
+        <div id="finalScores"></div>
+        <div class="dialog-actions">
+          <button id="menuBtn" class="chip-btn">BACK TO SHACK</button>
+          <button id="rematchBtn" class="big-btn">ROLL AGAIN</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<script type="module" src="js/main.js"></script>
+<script src="https://play.btownbrief.com/ticker.js" defer></script>
+</body>
+</html>
